@@ -1,6 +1,6 @@
 import csv
 
-from database.connect import texi_db, drivers, cars
+from database.connect import drivers, cars
 
 
 def read_csv(csv_path):
@@ -10,7 +10,7 @@ def read_csv(csv_path):
             yield row
 
 
-def init_texi_drivers():
+def init_taxi_drivers():
     drivers.drop()
     cars.drop()
 
@@ -39,10 +39,3 @@ def init_texi_drivers():
 
         drivers.insert_one(driver)
 
-init_texi_drivers()
-
-res = list(drivers.aggregate([
-  { '$lookup': { 'from': 'cars', 'localField': 'car_id', 'foreignField': '_id', 'as': 'car' } },
-  { '$match': { 'car.brand': { '$ne': 'Honda' } } }
-]))
-print(res)
